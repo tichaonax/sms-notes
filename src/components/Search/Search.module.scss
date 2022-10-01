@@ -1,0 +1,33 @@
+.search {
+	display: flex;
+	align-items: center;
+	background-color: rgb(233, 233, 233);
+	border-radius: 5px;
+	padding: 5px;
+	-webkit-border-radius: 5px;
+	-moz-border-radius: 5px;
+	-ms-border-radius: 5px;
+	-o-border-radius: 5px;
+	padding: 5px;
+	margin-left: 5px;
+	margin-bottom: 5px;
+	margin-right: 5px;
+	margin-top: 10px;
+  	width: 100%;
+}
+
+.search input {
+	border: none;
+	background-color: rgb(233, 233, 233);
+	width: 100%;
+}
+
+.search input:focus {
+	outline: none;
+}
+
+.box {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
