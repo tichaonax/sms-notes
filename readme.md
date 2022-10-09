@@ -20,6 +20,8 @@ In a work environment security is important, you may not store sensitive informa
 SMS-Notes can be hosted on a server in a work environment so everyone can access it but you have your own copy of notes which can be added to system notes to be available to others.
 You can also run it locally on your workstation.
 
+![image](https://user-images.githubusercontent.com/1031407/194779900-d0dc5201-f347-4569-bbe6-9a9e3bb36a3c.png)
+
 ## Installation
 
 ```bash
