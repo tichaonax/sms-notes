@@ -12,8 +12,8 @@ import { useFilePicker } from 'use-file-picker';
 import { ActiveNoteState, Item, loadSmsNotes } from "state";
 import { useAppDispatch } from "hooks/hooks";
 import { formatTitle } from "utils";
-
-export interface MenuProps {
+import { ToastControl } from "App";
+export interface MenuProps extends ToastControl {
     onImportFromClipBoard: () => void,
     onCopyNoteToClipBoard: () => void,
     onCopyNotesToClipBoard: () => void,
@@ -35,6 +35,9 @@ export const Menu = ({
             activeNote,
             onImportSystemNotes,
             onDeleteSystemNotes,
+            onNotify,
+            onNotifySuccess,
+            onNotifyError,
         } : MenuProps) => {
             
     const [openFileSelector, { filesContent, loading, errors, plainFiles, clear }] = useFilePicker({
@@ -50,11 +53,13 @@ export const Menu = ({
                 const file = filesContent[0];
                 const newItems = JSON.parse(file.content);
                 dispatch(loadSmsNotes(newItems));
-                onImportFromFile(newItems)
+                onImportFromFile(newItems);
+                onNotifySuccess('Notes import successful!');
             }
-        }, [filesContent, dispatch, onImportFromFile]);
+        }, [filesContent]);
 
         if (errors.length) {
+            onNotifyError('Failed to import sms notes');
         return (
             <div>
                 <Button onClick={() => openFileSelector()}>Something went wrong, retry! </Button>
@@ -77,9 +82,6 @@ export const Menu = ({
                     Import Notes
                 </Button>
              </div>
-             <div className="menu-item">
-                <Button icon={<ImportOutlined />} onClick={() => onImportSystemNotes()}>Add System Notes</Button>
-            </div>
                 {activeNote?.item?.title &&
                 (
                 <div className="menu-item">
@@ -90,19 +92,22 @@ export const Menu = ({
                 <Button icon={<DownloadOutlined />} onClick={() => onExportNotes(formatTitle('','note-export-'),false)}>Export All Notes</Button>
             </div>
             <div className="menu-item">
-                <Button icon={<CopyOutlined />} onClick={() => onCopyNoteToClipBoard()}>Copy Current Note To ClipBoard</Button>
+                <Button icon={<CopyOutlined />} onClick={() => onCopyNoteToClipBoard()}>Export Current Note To ClipBoard</Button>
             </div>
             <div className="menu-item">
-                <Button icon={<CopyOutlined />} onClick={() => onCopyNotesToClipBoard()}>Copy All Notes To ClipBoard</Button>
+                <Button icon={<CopyOutlined />} onClick={() => onCopyNotesToClipBoard()}>Export All Notes To ClipBoard</Button>
             </div>
             <div className="menu-item">
                 <Button icon={<ImportOutlined />} onClick={() => onImportFromClipBoard()}>Import Notes From ClipBoard</Button>
             </div>
             <div className="menu-item">
+                <Button icon={<ImportOutlined />} onClick={() => onImportSystemNotes()}>Add System Notes</Button>
+            </div>
+            <div className="menu-item">
                 <Button icon={<DeleteOutlined />} onClick={() => onDeleteSystemNotes()}>Delete System Notes</Button>
             </div>
             <div className="menu-item">
-                <Button icon={<DeleteOutlined  />} onClick={() => onDeleteNotes()}>Delete Listed Notes</Button>
+                <Button icon={<DeleteOutlined  />} onClick={() => onDeleteNotes()}>Delete All Notes</Button>
             </div>
         </div>
     );

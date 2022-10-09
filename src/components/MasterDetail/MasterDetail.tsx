@@ -11,6 +11,7 @@ import {
     addSmsNote,
     deleteSmsNoteById,
     deleteSmsNotes,
+    DocType,
     Item,
     loadSmsNotes,
     resetActiveItem,
@@ -21,9 +22,9 @@ import {
     setDirtyItem,
 } from 'state';
 import { useAppDispatch, useAppSelector, useLocalStorage } from 'hooks/hooks';
-import { AppProps } from 'App';
+import { AppProps, ToastControl } from 'App';
 
-export interface MasterDetailProps extends AppProps {
+export interface MasterDetailProps extends AppProps, ToastControl {
     MasterType: any,
     masterProps: any,
     DetailType:  any,
@@ -38,7 +39,7 @@ export const MasterDetail: React.FC<MasterDetailProps> = (props) => {
     const { confirm } = Modal;
     const printRef = React.useRef<HTMLInputElement | null>(null);
     const activeNote = useAppSelector(selectActiveItem());
-    const {items, setSmsNotesStorage, smsNotesStorage} = props;
+    const {items, setSmsNotesStorage, smsNotesStorage, onNotify, onNotifySuccess, onNotifyError} = props;
     const { items: samples } = useAppSelector(selectSampleSmsNotes());
     const [smsNotes, setSmsNotes] = useState(smsNotesStorage);
     const [notesDeleted, setNotesDeleted] = useState(false);
@@ -81,12 +82,13 @@ export const MasterDetail: React.FC<MasterDetailProps> = (props) => {
         setFiltered(filter);
     }, [searchText, setSmsNotesStorage, smsNotes]); 
 
-    const handleAddNote = () => {
+    const handleAddNote = (docType: DocType) => {
         const newNote: Item = {
             uuid: uuid(),
-            title: "Untitled Note",
+            title: `${DocType[docType]} Untitled Note`,
             note: "",
             lastModified: Date.now(),
+            docType,
           };
 
         dispatch(addSmsNote(newNote));
@@ -108,19 +110,24 @@ export const MasterDetail: React.FC<MasterDetailProps> = (props) => {
     }
     
     const onImportSystemNotes = () => {
-        saveImports(samples);  
+        saveImports(samples);
+        onNotifySuccess('System notes imported');  
     }
 
-    const onDeleteSystemNotes = () => {
+    const deleteItems = (notes: Item[]) => {
         let smsNotesCopy = [...smsNotes];
         dispatch(resetActiveItem());
 
-        samples.forEach((sample: Item) => {
-            dispatch(deleteSmsNoteById(sample.uuid));
-            smsNotesCopy = [...(smsNotesCopy.filter((note:Item) => note.uuid !== sample.uuid))]
+        notes.forEach((item: Item) => {
+            dispatch(deleteSmsNoteById(item.uuid));
+            smsNotesCopy = [...(smsNotesCopy.filter((note:Item) => note.uuid !== item.uuid))]
         });
 
         setSmsNotes(smsNotesCopy);
+    }
+
+    const onDeleteSystemNotes = () => {
+        deleteItems(samples);
     }
 
     const handleSaveNote = (item: Item) => {
@@ -158,6 +165,7 @@ export const MasterDetail: React.FC<MasterDetailProps> = (props) => {
           onOk() {
             dispatch(deleteSmsNotes());
             setSmsNotes([]);
+            //deleteItems(smsNotes);
             setNotesDeleted(true);
           },
       
@@ -241,6 +249,7 @@ export const MasterDetail: React.FC<MasterDetailProps> = (props) => {
             onDeleteNotes={onDeleteNotes}
             handleDeleteNote={handleDeleteNote}
             handleInputSearch={handleInputSearch}
+            setSearchText={setSearchText}
             handleClearSearch={handleClearSearch}
             notesCount={notesCount}
             onExportNotes={onExportNotes}
@@ -256,6 +265,9 @@ export const MasterDetail: React.FC<MasterDetailProps> = (props) => {
             singleNoteDeleted={singleNoteDeleted}
             setSingleNoteDeleted={setSingleNoteDeleted}
             refs={liRefs}
+            onNotify={onNotify}
+            onNotifySuccess={onNotifySuccess}
+            onNotifyError={onNotifyError}
         />);
     const detail = (
         <props.DetailType {...props.detailProps} 
@@ -283,6 +295,10 @@ export const MasterDetail: React.FC<MasterDetailProps> = (props) => {
             singleNoteDeleted={singleNoteDeleted}
             setSingleNoteDeleted={setSingleNoteDeleted}
             refs={liRefs}
+            setSearchText={setSearchText}
+            onNotify={onNotify}
+            onNotifySuccess={onNotifySuccess}
+            onNotifyError={onNotifyError}
         />);
 
     return ( 

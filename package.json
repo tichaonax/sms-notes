@@ -1,5 +1,5 @@
 {
-  "name": "sms-notes-app",
+  "name": "sms-notes",
   "version": "0.1.0",
   "private": true,
   "dependencies": {
@@ -26,11 +26,14 @@
     "react-icons": "^4.4.0",
     "react-media": "^1.10.0",
     "react-redux": "^8.0.2",
+    "react-responsive": "^9.0.0",
     "react-router-dom": "^6.3.0",
     "react-scripts": "5.0.1",
     "react-test-renderer": "^18.2.0",
+    "react-toastify": "^9.0.8",
     "react-uuid": "^1.0.3",
     "reactjs-popup": "^2.0.5",
+    "remark-gfm": "^3.0.1",
     "sass": "^1.54.9",
     "source-map-explorer": "^2.5.2",
     "typescript": "^4.8.3",

@@ -18,6 +18,9 @@ export const PopupMenu = ({
     onDeleteNotes,
     onImportSystemNotes,
     onDeleteSystemNotes,
+    onNotify,
+    onNotifySuccess,
+    onNotifyError,
   }: PopupMenuProps) => {
 
   const [open, setOpen] = useState(false);
@@ -25,9 +28,7 @@ export const PopupMenu = ({
 
   return (
     <div>
-      <Button icon={<MenuOutlined />} onClick={() => setOpen(o => !o)}>
-        SMS Menu
-      </Button>
+      <Button icon={<MenuOutlined />} onClick={() => setOpen(o => !o)}/>
       <Popup open={open} closeOnDocumentClick onClose={closeModal}>
         <div className="modal">
           <a className="close" onClick={closeModal}>
@@ -42,7 +43,10 @@ export const PopupMenu = ({
             activeNote={activeNote}
             onDeleteNotes={onDeleteNotes} 
             onImportSystemNotes={onImportSystemNotes}
-            onDeleteSystemNotes={onDeleteSystemNotes}           
+            onDeleteSystemNotes={onDeleteSystemNotes}
+            onNotify={onNotify}
+            onNotifySuccess={onNotifySuccess}
+            onNotifyError={onNotifyError}           
           />
         </div>
       </Popup>

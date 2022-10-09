@@ -1,21 +1,15 @@
 import React from 'react';
 import ReactMarkdown from 'react-markdown';
+import remarkGfm from 'remark-gfm'
 import { Header, HeaderProps, Mermaid, NoteDeleted } from 'components';
-import { matchMermaidGraph } from "../../utils/matchMermaidGraph";
 import styles from './Detail.module.scss';
 import { useLocation, useParams } from 'react-router-dom';
 import { useAppSelector } from 'hooks/hooks';
-import { selectActiveItem, selectSmsNoteById } from 'state';
+import { DocType, selectActiveItem, selectSmsNoteById } from 'state';
 import { UseRefType } from 'containers';
-
-export interface DetailProps extends HeaderProps, NoteDeleted, UseRefType {
+import { ToastControl } from 'App';
+export interface DetailProps extends HeaderProps, NoteDeleted, UseRefType, ToastControl {
 }
-
-const removeGraph = (note: string) => {
-    if(!note) return '';
-    const position = matchMermaidGraph(note);
-    return position === -1 ? note.substring(position) : note.substring(0, position);
-  }
   
 export const DetailContainer: React.FC<DetailProps> = ({
     handleClearSearch,
@@ -41,7 +35,11 @@ export const DetailContainer: React.FC<DetailProps> = ({
     filtered,
     singleNoteDeleted,
     setSingleNoteDeleted,
-    refs
+    refs,
+    setSearchText,
+    onNotify,
+    onNotifySuccess,
+    onNotifyError,
 }) => {
     const printRef = React.useRef<HTMLInputElement | null>(null);
     const { uuid } = useParams<{ uuid?:string }>();
@@ -90,14 +88,25 @@ export const DetailContainer: React.FC<DetailProps> = ({
                 singleNoteDeleted={singleNoteDeleted}
                 setSingleNoteDeleted={setSingleNoteDeleted}
                 refs={refs}
+                textFieldId={''}
+                setSearchText={setSearchText}
+                onNotify={onNotify}
+                onNotifySuccess={onNotifySuccess}
+                onNotifyError={onNotifyError}
             />
             <main>
                 <div ref={printRef} id="report-content" className={styles.content}>
                     <h1 className="preview-title">{title}</h1>
-                    <ReactMarkdown>
-                        {removeGraph(body)}
-                    </ReactMarkdown>
-                    <Mermaid chart={body}></Mermaid>
+                    {
+                        (item?.docType === DocType.Markdown) && (
+                            <ReactMarkdown  remarkPlugins={[remarkGfm]}>
+                                {body}
+                            </ReactMarkdown>
+                        )
+                    }
+                    {
+                        (item?.docType === DocType.Mermaid) && (<Mermaid chart={body}></Mermaid>)
+                    }
                 </div>
             </main>
         </section>  

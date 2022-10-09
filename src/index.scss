@@ -35,23 +35,16 @@
       --app-color-background: rgb(32,32,32);
       --app-color-background-transparent: rgba(40,40,40,0.9);
       --app-color-background-highlight: rgb(0,88,208);
-  
-      //--app-color-border: rgb(45,45,45);
      --app-color-border: rgb(176,5,5);
   
       --app-color-text-primary: rgb(223,223,223);
       --app-color-text-primary-highlight: rgb(223,223,223);
       --app-color-text-secondary: rgb(120,120,120);
       --app-color-text-secondary-highlight: rgba(255,255,255,0.6);
-      //background-color: #222736;
       background-color: #010511;
-      //color: #eff2f7,
-     //header-footer: #36394c,
       color: #7c7c7c;
   }
   .dark input {
-    //color: #36394c;
-    //color: #1890ff;
     color: #ff4d4f;
     background-color: #010511;
   }
@@ -110,4 +103,3 @@
     --app-color-text-secondary: rgb(142,141,146);
     --app-color-text-secondary-highlight: rgba(255,255,255,0.6);
   }
-

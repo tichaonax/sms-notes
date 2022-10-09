@@ -1,6 +1,6 @@
 import React from 'react';
 import { useLocation } from 'react-router-dom';
-import { Header, HeaderProps, ListItemLink, NoteDeleted, UserControl } from 'components';
+import { Header, HeaderProps, ListItemLink, NoteDeleted, SEARCH_TEXT_FIELD_ID, UserControl } from 'components';
 import { Item, selectSmsNoteById } from 'state';
 import { useAppSelector } from 'hooks/hooks';
 import { getLastPathItem } from 'utils';
@@ -34,6 +34,7 @@ export const MasterContainer: React.FC<MasterProps> = ({
     onCopyNoteToClipBoard,
     onCopyNotesToClipBoard,
     setFiltered,
+    setSearchText,
     setSmsNotes,
     onImportSystemNotes,
     onDeleteSystemNotes,
@@ -46,6 +47,9 @@ export const MasterContainer: React.FC<MasterProps> = ({
     singleNoteDeleted,
     setSingleNoteDeleted,
     refs,
+    onNotify,
+    onNotifySuccess,
+    onNotifyError,
 }) => {
 
      const {pathname} = useLocation();
@@ -101,6 +105,11 @@ export const MasterContainer: React.FC<MasterProps> = ({
                 singleNoteDeleted={singleNoteDeleted}
                 setSingleNoteDeleted={setSingleNoteDeleted}
                 refs={refs}
+                textFieldId={SEARCH_TEXT_FIELD_ID}
+                setSearchText={setSearchText}
+                onNotify={onNotify}
+                onNotifySuccess={onNotifySuccess}
+                onNotifyError={onNotifyError}
             />
             <ul>
                 {listNotes}

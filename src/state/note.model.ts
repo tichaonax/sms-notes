@@ -10,9 +10,14 @@ export class Items {
 }
 
 export interface Item {
-    [x: string]: any;
-    uuid: string
+    uuid: string;
     title: string;
     note: string;
     lastModified: number;
+    docType: DocType;
 }
+
+export enum DocType {
+    Markdown,
+    Mermaid,
+  }

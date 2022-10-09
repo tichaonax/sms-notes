@@ -4,20 +4,26 @@ import Media from 'react-media';
 import { ExclamationCircleOutlined, SaveOutlined, ExportOutlined } from '@ant-design/icons';
 import { formatTitle, getFileName, mediaQueries } from 'utils';
 import styles from './Header.module.scss';
-import { NoteDeleted, Search, SearchProps, SelectViewableProps, SelectViewableSize } from 'components';
+import { NoteDeleted, Search, SearchProps, SEARCH_TEXT_FIELD_ID, SelectViewableProps, SelectViewableSize } from 'components';
 import { Button, Modal } from 'antd';
 import html2canvas from 'html2canvas';
 import jsPDF from 'jspdf';
 import { useAppDispatch } from 'hooks/hooks';
-import { addSmsNote, Item, loadSmsNotes, setActiveItem, setDirtyItem } from 'state';
+import { addSmsNote, DocType, Item, loadSmsNotes, setActiveItem, setDirtyItem } from 'state';
 import uuid from 'react-uuid';
 import { UseRefType } from 'containers';
+import { ToastControl } from 'App';
 
+declare global {
+    interface WindowEventMap {
+      keydown: React.KeyboardEvent<HTMLInputElement>
+    }
+  }
 export interface UserControl {
     toggleTheme: () => void,
 }
 
-export interface HeaderProps extends SearchProps, UserControl, SelectViewableProps, NoteDeleted, UseRefType{
+export interface HeaderProps extends SearchProps, UserControl, SelectViewableProps, NoteDeleted, UseRefType, ToastControl {
     title: string,
     body: string,
     hideBackButton?: boolean,
@@ -27,6 +33,7 @@ export interface HeaderProps extends SearchProps, UserControl, SelectViewablePro
     showHeader?: boolean,
     showEditNote?: boolean,
     setFiltered: (filtered: any) => void,
+    setSearchText: (text: string) => void,
     setSmsNotes: (notes: any) => void,
     smsNotes: Item[],
     filtered: Item[],
@@ -80,6 +87,11 @@ export const Header: React.FC<HeaderProps> = ({
     singleNoteDeleted,
     setSingleNoteDeleted,
     body,
+    textFieldId,
+    setSearchText,
+    onNotify,
+    onNotifySuccess,
+    onNotifyError,
 }) => {
     const navigate = useNavigate();
      const { confirm } = Modal;
@@ -88,6 +100,58 @@ export const Header: React.FC<HeaderProps> = ({
     const [newNoteMode, setNewNoteMode] = useState(false);
     const dispatch = useAppDispatch();
     
+    const handleUserKeyPress = (event: React.KeyboardEvent<HTMLInputElement>) => {
+        const { key, ctrlKey } = event;
+        console.dir(event);
+        if(ctrlKey) {
+            switch (key) {
+                case "s":{
+                    event.preventDefault();
+                    onNoteUpdated();
+                    break;
+                }
+
+                case "f":{
+                    event.preventDefault();
+                    document.getElementById(SEARCH_TEXT_FIELD_ID)?.focus();
+                    break;
+                }
+
+                case "x":{
+                    const searchText = document.getElementById(SEARCH_TEXT_FIELD_ID) as HTMLFormElement;
+                    if(searchText){
+                        event.preventDefault();
+                        searchText.value = '';
+                        setSearchText('');
+                    }
+                    break;
+                }
+
+                case "m":{
+                    event.preventDefault();
+                    handleAddNote(DocType.Markdown);
+                    break;
+                }
+
+                case "g":{
+                    event.preventDefault();
+                    handleAddNote(DocType.Mermaid);
+                    break;
+                }
+
+                default:
+                    break;
+            }
+        }
+    }
+    
+    useEffect(() => {
+        window.addEventListener('keydown', handleUserKeyPress)
+        return () => {
+            window.removeEventListener('keydown', handleUserKeyPress)
+        }
+    })
+
     const onEditField = (field: string, value:string) =>{
 
         let noteUuid = activeNote?.item?.uuid;
@@ -152,7 +216,7 @@ export const Header: React.FC<HeaderProps> = ({
             setNewNoteMode(false);
             dispatch(addSmsNote(activeNote.dirtyItem));
         }
-    }, [newNoteMode]);
+    }, [activeNote, dispatch, newNoteMode]);
 
 
     useEffect(() => {
@@ -220,7 +284,7 @@ export const Header: React.FC<HeaderProps> = ({
                     <div>
                         <Button icon={<ExportOutlined />} onClick={() =>
                             onGeneratePDF(printRef,`notes-report-${formatTitle(title,'')}`,'portrait')}>
-                                Export Viewable Note To PDF
+                                Export Note To PDF
                         </Button> 
                         {noteUpdated && (
                             <Button icon={<SaveOutlined />} type="primary" onClick={() =>
@@ -250,6 +314,10 @@ export const Header: React.FC<HeaderProps> = ({
                         activeNote={activeNote}
                         onImportSystemNotes={onImportSystemNotes}
                         onDeleteSystemNotes={onDeleteSystemNotes}
+                        textFieldId={textFieldId}
+                        onNotify={onNotify}
+                        onNotifySuccess={onNotifySuccess}
+                        onNotifyError={onNotifyError}
                     />)
             }
         </div> 

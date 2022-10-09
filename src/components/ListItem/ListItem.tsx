@@ -1,5 +1,6 @@
-import { Button } from 'antd';
 import React from 'react'; 
+import { Button } from 'antd';
+import { DeleteOutlined } from '@ant-design/icons';
 import { Item } from 'state';
 import componentStyles from '../../components/ListItemLink/ListItemLink.module.scss';
 import styles from './ListItem.module.scss';
@@ -24,7 +25,7 @@ export const ListItem: React.FC<ListItemProps> = (props) => {
             <div className={styles.inner}>
 
                 <h1 data-test="ListItemHeading">
-                    <Button type="text" onClick={(e) => onDeleteNote(item.uuid)}>Delete</Button>
+                    <Button  icon={<DeleteOutlined  />} type="text" onClick={(e) => onDeleteNote(item.uuid)}></Button>
                     <strong>
                         { item.title ? item.title : listItemNoDataMessage }
                     </strong>

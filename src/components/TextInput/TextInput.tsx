@@ -5,6 +5,7 @@ export interface TextInputProps {
   value: string,
   handleChange: (event: ChangeEvent<HTMLInputElement>) => void,
   placeholder: string,
+  textFieldId: string
 };
 
 interface FocusEvent<T = Element> extends SyntheticEvent<T> {
@@ -12,10 +13,10 @@ interface FocusEvent<T = Element> extends SyntheticEvent<T> {
   target: EventTarget & T;
 }
 
-export const TextInput = ({ value, handleChange, placeholder }: TextInputProps) => {
+export const TextInput = ({ value, handleChange, placeholder, textFieldId }: TextInputProps) => {
   const handleOnFocus = (event: FocusEvent<HTMLInputElement>) => {
     // do something on focus event here
    }
 
-  return <input type="text" value={value} onChange={handleChange} placeholder={placeholder} onFocus={handleOnFocus}/>;
+  return <input id={textFieldId} type="text" value={value} onChange={handleChange} placeholder={placeholder} onFocus={handleOnFocus}/>;
 };

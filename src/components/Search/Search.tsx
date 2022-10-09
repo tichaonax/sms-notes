@@ -1,11 +1,13 @@
 import React from 'react';
-import { AddNote, AddNoteProps, NotesCount, TextInput, TextInputProps, PopupMenu, PopupMenuProps, NotesCountProps } from 'components';
+import { AddNoteProps, NotesCount, TextInput, TextInputProps, PopupMenu, PopupMenuProps, NotesCountProps, AddMermaidNote, AddMarkDownNote } from 'components';
 import { MdSearch, MdClear } from 'react-icons/md';
 import styles from './Search.module.scss';
 
 export interface SearchProps extends TextInputProps, AddNoteProps, PopupMenuProps, NotesCountProps {
     handleClearSearch: () => void,
 }
+export const SEARCH_TEXT_FIELD_ID ='sms-search-field';
+
 export const Search = ({
     handleChange,
     value,
@@ -22,12 +24,16 @@ export const Search = ({
     activeNote,
     onImportSystemNotes,
     onDeleteSystemNotes,
+    onNotify,
+    onNotifySuccess,
+    onNotifyError,
 } : SearchProps ) => {
 
 	return (
 		<div className={styles.box}>
             <NotesCount notesCount={notesCount}/>
-            <AddNote handleAddNote={handleAddNote}/>
+            <AddMarkDownNote handleAddNote={handleAddNote}/>
+            <AddMermaidNote handleAddNote={handleAddNote}/>
             <div className="menu-item">
                 <PopupMenu 
                 onExportNotes={onExportNotes}
@@ -40,16 +46,19 @@ export const Search = ({
                 activeNote={activeNote}
                 onImportSystemNotes={onImportSystemNotes}
                 onDeleteSystemNotes={onDeleteSystemNotes}
+                onNotify={onNotify}
+                onNotifySuccess={onNotifySuccess}
+                onNotifyError={onNotifyError}
                 />
             </div>
 			<div className={styles.search}>
                 <MdClear cursor={"pointer"}  className='search-icons' onClick={()=>{handleClearSearch()}}/>
 				<MdSearch className='search-icons'/>
-                <TextInput 
+                <TextInput
+                    textFieldId={SEARCH_TEXT_FIELD_ID}
                     handleChange={handleChange}
                     placeholder={placeholder}
-                    value={value}
-                />
+                    value={value}                />
 			</div>
 		</div>
 	);
