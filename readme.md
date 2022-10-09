@@ -23,15 +23,15 @@ You can also run it locally on your workstation.
 ## Installation
 
 ```bash
-git clone 
+git clone https://github.com/tichaonax/sms-notes.git
+navigate to "sms-notes" folder
+npm i
+npm run start
 ```
 
 ## Usage
 
-```ts
-navigate to where the code base is
-npm run start
-```
+
 - Add Markdown notes "Ctrl M" or click "MD" on toolbar
 - Add Mermaid diagram "Ctrl G" or click "GR" on toolbar
 - To search notes "Ctrl S" the search box gets focus, filters as you type. Match count reflects hits
