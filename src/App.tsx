@@ -2,13 +2,12 @@ import React, { useEffect } from 'react';
 import { BrowserRouter as Router, Navigate, Route, Routes } from 'react-router-dom';
 import { ToastContainer } from 'react-toastify';
 import { useMediaQuery } from 'react-responsive';
-import { MasterDetail } from 'components';
+import { MasterDetail, ToastMessage } from 'components';
 import { MasterContainer, DetailContainer } from 'containers';
 import { useAppSelector, useLocalStorage } from 'hooks/hooks';
 import { Item, loadSampleSmsNotes, selectSmsNotes, store } from 'state';
 import { systemNotes } from 'state/system/systemNotes';
 import { mediaQueries } from 'utils';
-import { onToastMessage } from './onToastMessage';
 import 'antd/dist/antd.css';
 import 'react-toastify/dist/ReactToastify.css';
 
@@ -38,7 +37,7 @@ export const App:React.FC<AppProps> = ()  => {
     }
   };
 
-  const { onNotify, onNotifySuccess, onNotifyError } = onToastMessage();
+  const { onNotify, onNotifySuccess, onNotifyError } = ToastMessage();
 
   useEffect(() => {
     document.body.className = theme;

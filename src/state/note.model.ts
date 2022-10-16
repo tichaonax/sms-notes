@@ -13,8 +13,8 @@ export interface Item {
     uuid: string;
     title: string;
     note: string;
-    lastModified: number;
     docType: DocType;
+    lastModified: number;
 }
 
 export enum DocType {

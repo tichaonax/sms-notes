@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import Media from 'react-media';
-import { ExclamationCircleOutlined, SaveOutlined, ExportOutlined } from '@ant-design/icons';
+import { ExclamationCircleOutlined, SaveOutlined, ExportOutlined, CopyOutlined } from '@ant-design/icons';
 import { formatTitle, getFileName, mediaQueries } from 'utils';
 import styles from './Header.module.scss';
 import { NoteDeleted, Search, SearchProps, SEARCH_TEXT_FIELD_ID, SelectViewableProps, SelectViewableSize } from 'components';
@@ -42,7 +42,7 @@ export interface HeaderProps extends SearchProps, UserControl, SelectViewablePro
 
 export const headerEmptyTitle = 'No Title';
 
-const onGeneratePDF = async (printRef: React.MutableRefObject<HTMLInputElement | null>, header : string, orientation : any) => {
+const onGeneratePDF = async (printRef: React.MutableRefObject<HTMLInputElement | null>, header : string, orientation : any, onNotifySuccess : any) => {
     const element = printRef.current as HTMLInputElement;
     const canvas = await html2canvas(element);
     const data = canvas.toDataURL('image/png');
@@ -52,6 +52,7 @@ const onGeneratePDF = async (printRef: React.MutableRefObject<HTMLInputElement |
     const pdfHeight = (imgProperties.height * pdfWidth) / imgProperties.width;
     pdf.addImage(data, 'PNG', 0, 0, pdfWidth, pdfHeight);
     pdf.save(getFileName(header,'pdf'));
+    onNotifySuccess("Export to PDF successful");
 }; 
 
 export const Header: React.FC<HeaderProps> = ({ 
@@ -283,15 +284,18 @@ export const Header: React.FC<HeaderProps> = ({
                 showPdfExport  && (
                     <div>
                         <Button icon={<ExportOutlined />} onClick={() =>
-                            onGeneratePDF(printRef,`notes-report-${formatTitle(title,'')}`,'portrait')}>
+                            onGeneratePDF(printRef,`notes-report-${formatTitle(title,'')}`,'portrait', onNotifySuccess)}>
                                 Export Note To PDF
-                        </Button> 
-                        {noteUpdated && (
-                            <Button icon={<SaveOutlined />} type="primary" onClick={() =>
-                                onNoteUpdated()}>
-                                Save Note
-                            </Button>
-                        )}
+                        </Button>
+                        <Button icon={<CopyOutlined />} onClick={() => onCopyNoteToClipBoard()}>
+                            Export Current Note To ClipBoard
+                        </Button>
+                        {
+                            noteUpdated ?  (
+                                <Button icon={<SaveOutlined />} type="primary" onClick={() => onNoteUpdated()}>
+                                    Save Note
+                                </Button>) : null
+                        }
                      </div>       
                     )
                 }

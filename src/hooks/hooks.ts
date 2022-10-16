@@ -1,12 +1,12 @@
 import { useState, useEffect } from "react";
 import { TypedUseSelectorHook, useDispatch, useSelector } from 'react-redux';
 import type { RootState, AppDispatch } from '../state/store';
-import { onToastMessage } from "onToastMessage";
+import { ToastMessage } from '../components/ToastMessage/ToastMessage';
 
 export const useAppDispatch = () => useDispatch<AppDispatch>();
 export const useAppSelector: TypedUseSelectorHook<RootState> = useSelector;
 
-const { onNotifyError } = onToastMessage();
+const {onNotifyError} = ToastMessage();
 
 export const useLocalStorage = (key: string, initialValue: any)=>{
     const [state, setState] = useState(() => {

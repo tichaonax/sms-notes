@@ -13,7 +13,6 @@ export interface AppStore {
 
 export const store = createStore(
     combineReducers({ 
-        //sampleNote:note,
         sampleNote,
         activeNote,
         smsNote,

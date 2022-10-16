@@ -35,12 +35,11 @@ export const Menu = ({
             activeNote,
             onImportSystemNotes,
             onDeleteSystemNotes,
-            onNotify,
             onNotifySuccess,
             onNotifyError,
         } : MenuProps) => {
             
-    const [openFileSelector, { filesContent, loading, errors, plainFiles, clear }] = useFilePicker({
+    const [openFileSelector, { filesContent, loading, errors }] = useFilePicker({
             multiple: true,
             readAs: 'Text',
             accept: ['.json'],

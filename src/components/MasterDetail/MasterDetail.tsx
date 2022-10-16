@@ -1,4 +1,4 @@
-import React, { createRef, useEffect, useState } from 'react';
+import React, { createRef, useEffect, useMemo, useState } from 'react';
 import { Route, Routes, useLocation, useNavigate } from 'react-router-dom';
 import { AnyAction, Dispatch } from '@reduxjs/toolkit';
 import Media from 'react-media';
@@ -53,7 +53,6 @@ export const MasterDetail: React.FC<MasterDetailProps> = (props) => {
      }, [setViewableSizeStorage, viewableSize]);
 
     const [searchText, setSearchText] = useState('');
-    const [notesCount, setNotesCount] = useState(0);
 
     const {pathname} = useLocation();
     const id = getLastPathItem(pathname);
@@ -74,13 +73,18 @@ export const MasterDetail: React.FC<MasterDetailProps> = (props) => {
 
     const [filtered, setFiltered] = useState([]);
 
-    useEffect(() => {
-        const filter = smsNotes.filter(
+    const memoizedFilter = useMemo(() => {
+        return smsNotes.filter(
             (item:Item) => (item.title?.toLowerCase().includes(searchText.toLowerCase()) 
             || item.note?.toLowerCase().includes(searchText.toLowerCase())));
-        setNotesCount(filter.length);
-        setFiltered(filter);
-    }, [searchText, setSmsNotesStorage, smsNotes]); 
+      }, [smsNotes, searchText]);
+
+  
+    const notesCount = memoizedFilter.length;
+
+    useEffect(() => {
+        setFiltered(memoizedFilter);
+    }, [memoizedFilter]); 
 
     const handleAddNote = (docType: DocType) => {
         const newNote: Item = {
@@ -99,7 +103,14 @@ export const MasterDetail: React.FC<MasterDetailProps> = (props) => {
     };
 
     const copyTocClipBoard = (copyItems:Item[])=>{
-        navigator.clipboard.writeText(JSON.stringify(copyItems))
+        navigator.clipboard.writeText(JSON.stringify(copyItems)).then(
+            () => {
+                onNotifySuccess("copy to clipboard successful");
+            },
+            (error) => {
+              onNotifyError(`Error! Could not copy to clipboard: ${error}`);
+            }
+          );
     }
     const onCopyNoteToClipBoard = () => {
         copyTocClipBoard([{...activeNote.item}]);
@@ -128,6 +139,7 @@ export const MasterDetail: React.FC<MasterDetailProps> = (props) => {
 
     const onDeleteSystemNotes = () => {
         deleteItems(samples);
+        onNotifySuccess("System notes delete successful"); 
     }
 
     const handleSaveNote = (item: Item) => {
@@ -157,7 +169,7 @@ export const MasterDetail: React.FC<MasterDetailProps> = (props) => {
         confirm({
           title: `Are you sure DELETE all ${items?.length} Notes?`,
           icon: <ExclamationCircleOutlined />,
-          content: 'This will permanently delete all notes and replace with defaults Notes',
+          content: 'This will permanently delete all notes',
           okText: 'Yes',
           okType: 'danger',
           cancelText: 'No',
@@ -165,8 +177,8 @@ export const MasterDetail: React.FC<MasterDetailProps> = (props) => {
           onOk() {
             dispatch(deleteSmsNotes());
             setSmsNotes([]);
-            //deleteItems(smsNotes);
             setNotesDeleted(true);
+            onNotifySuccess("Notes delete successful"); 
           },
       
           onCancel() {
@@ -189,6 +201,7 @@ export const MasterDetail: React.FC<MasterDetailProps> = (props) => {
                 const notes = smsNotes.filter((note:Item) => note.uuid !== uuid)
                 setSmsNotes(notes);
                 setSingleNoteDeleted(true);
+                onNotifySuccess("Note delete successful"); 
             },
         
             onCancel() {
@@ -201,9 +214,11 @@ export const MasterDetail: React.FC<MasterDetailProps> = (props) => {
     const onImportFromClipBoard = () => {
         navigator.clipboard.readText().then((notes) => {
             const newItems: Item[] = JSON.parse(notes);
-            saveImports(newItems);  
+            saveImports(newItems);
+            onNotifySuccess("Import from clipboard successful"); 
         }).catch((error)=>{
             console.log(error);
+            onNotifyError(`Error! Could not import from  clipboard: ${error}`);
         });
      }
 
@@ -218,7 +233,7 @@ export const MasterDetail: React.FC<MasterDetailProps> = (props) => {
             setNotesDeleted(false);
             navigate(0);
         }
-     }, [dispatch, navigate, notesDeleted, setSmsNotesStorage, smsNotes, singleNoteDeleted]);
+    }, [dispatch, notesDeleted, smsNotes, setSmsNotesStorage]);
 
     const onExportNotes = (title : string, isActiveNote:boolean=false) => { 
         const noteExport = isActiveNote ? [activeNote.item] : smsNotes;
@@ -233,6 +248,7 @@ export const MasterDetail: React.FC<MasterDetailProps> = (props) => {
         }
         link.href = url;
         link.click();
+        onNotifySuccess("Notes export successful"); 
     }
     
      const liRefs  =  filtered.map(() => createRef<HTMLDivElement | null>());

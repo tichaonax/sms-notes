@@ -25,7 +25,7 @@ export const ListItem: React.FC<ListItemProps> = (props) => {
             <div className={styles.inner}>
 
                 <h1 data-test="ListItemHeading">
-                    <Button  icon={<DeleteOutlined  />} type="text" onClick={(e) => onDeleteNote(item.uuid)}></Button>
+                    <Button  icon={<DeleteOutlined  />} type="text" onClick={() => onDeleteNote(item.uuid)}></Button>
                     <strong>
                         { item.title ? item.title : listItemNoDataMessage }
                     </strong>

@@ -1,6 +1,6 @@
 import { toast } from 'react-toastify';
 
-export const onToastMessage = () => {
+export const ToastMessage = () => {
 
   const onNotify = (message: string) => toast(message);
 
@@ -14,7 +14,7 @@ export const onToastMessage = () => {
     progress: undefined,
   });
 
-  const onNotifyError = (message: string) => toast.success(message, {
+  const onNotifyError = (message: string) => toast.error(message, {
     position: 'bottom-center',
     autoClose: 2500,
     hideProgressBar: false,

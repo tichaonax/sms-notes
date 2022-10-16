@@ -20,7 +20,7 @@ const activeNoteStateSlice = createSlice({
     setDirtyItem(state, action: PayloadAction<Item>) {
       state.dirtyItem = action.payload
     },
-    resetActiveItem(state, action: PayloadAction) {
+    resetActiveItem() {
       return(initialState)
     },
   },

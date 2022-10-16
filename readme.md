@@ -31,6 +31,16 @@ npm i
 npm run start
 ```
 
+If you are a developer who uses port 3000 or port 3001 in your work projects then you want to start your sms-notes app running on another port. From git bash for example running on port 4000
+
+```PORT=4000 npm run start```
+
+Keep in mind that sms-notes are stored in localStorage and that location is different for each port or domain. So if you see that you are missing some notes that is most likely the culprit. In a situation like that, before running on another port, export your current notes to a json file and reimport in the other port. The exported has the following format
+```note-export--2022-10-15T16-30-19.373Z.json```
+
+**If you have port collision your other app might not work if it does port forwarding on port 3000**
+
+React default port is 3000.
 ## Usage
 
 

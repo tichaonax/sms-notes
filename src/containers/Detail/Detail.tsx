@@ -3,7 +3,7 @@ import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm'
 import { Header, HeaderProps, Mermaid, NoteDeleted } from 'components';
 import styles from './Detail.module.scss';
-import { useLocation, useParams } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import { useAppSelector } from 'hooks/hooks';
 import { DocType, selectActiveItem, selectSmsNoteById } from 'state';
 import { UseRefType } from 'containers';
@@ -49,9 +49,6 @@ export const DetailContainer: React.FC<DetailProps> = ({
     const headerTitle = (item && !singleNoteDeleted) ? item?.title : 'Detail';
     const title = (item && !singleNoteDeleted) ? item.title : 'Nothing Selected';
     const body = (item && !singleNoteDeleted) ? item?.note : 'Detail Page';
-
-    const location = useLocation();
-    const {state} = location;
 
     return (
         <section className={styles.component}>

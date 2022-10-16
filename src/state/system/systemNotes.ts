@@ -34,5 +34,12 @@ export const systemNotes =
 		"note": "### configure windows \n#### download from https://download.kde.org/stable/kdiff3/\n\n**please check the install folder of kdiff3**\n\n\ngit config --global merge.tool kdiff3\n\ngit config --global mergetool.kdiff3.path \"C:/Program Files/KDiff3/bin/kdiff3.exe\"\n\ngit config --global mergetool.kdiff3.trustExitCode false\n\ngit config --global diff.guitool kdiff3\n\ngit config --global difftool.kdiff3.path \"C:/Program Files/KDiff3/bin/kdiff3.exe\"\n\ngit config --global difftool.kdiff3.trustExitCode false\n\n### configure ubuntu\nsudo apt install kdiff3\n\ngit config --global merge.tool kdiff3\n\ngit config --global mergetool.kdiff3.path \"/usr/bin/kdiff3\"\n\ngit config --global mergetool.kdiff3.trustExitCode false\n\ngit config --global diff.guitool kdiff3\n\ngit config --global difftool.kdiff3.path \"/user/bin/kdiff3\"\n\ngit config --global difftool.kdiff3.trustExitCode false\n\n### to invoke merge run\ngit mergetool --tool=kdiff3",
 		"docType": 0,
 		"lastModified": 1664558325708
+	},
+	{
+		"uuid": "647c1af-7263-42a4-f840-e37604fc3803",
+		"title": "VSCode cheatsheet",
+		"note": "Set of must know vs-code productivity short-cuts\n\n#### command pallet\n```CTRL + P ```\n\n\n#### global search all symbols including methods in all files\n```CTRL + P then start your search with #```\n\n```CTRL + T ```\n\n\n#### search for symbols in the same file\n\n```CTRL + P then start your search with @```\n\n```CTRL + SHIFT + O ```\n\n\n#### go to line number in current file\n\n```CTRL + G```\n\n\n#### open new terminal widow.\n```CTRL + ` ```\n\n#### move one word left or right on terminal command.\n```CTRL + <```\n\n```CTRL + >```\n",
+		"docType": 0,
+		"lastModified": 1665936042811
 	}
 ]
